@@ -16,7 +16,7 @@ See the [full changelog](/CHANGELOG.md) for release details.
 ## Install
 If you just want to use fca-unofficial, you should use this command:
 ```bash
-npm install manhkhac/api-chat-facebook
+npm install api-chat-facebook
 ```
 It will download `fca-unofficial` from NPM repositories
 
