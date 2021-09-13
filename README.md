@@ -1,7 +1,7 @@
 This repo is a fork from main repo and will usually have new features bundled faster than main repo (and maybe bundle some bugs, too).
 
 # Unofficial Facebook Chat API
-<img alt="version" src="https://img.shields.io/github/package-json/v/demngayyeu/fca-unofficial?label=github&style=flat-square">
+<img alt="version" src="https://img.shields.io/github/package-json/v/manhkhac/api-chat-facebook?label=github&style=flat-square">
 
 Facebook now has an official API for chat bots [here](https://developers.facebook.com/docs/messenger-platform).
 
