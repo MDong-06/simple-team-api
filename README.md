@@ -16,7 +16,7 @@ See the [full changelog](/CHANGELOG.md) for release details.
 ## Install
 If you just want to use fca-unofficial, you should use this command:
 ```bash
-npm install api-facebook-v2
+npm install facebook-chat-api-v2
 ```
 It will download `fca-unofficial` from NPM repositories
 
