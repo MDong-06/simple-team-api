@@ -193,6 +193,7 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 - [c3c](https://github.com/lequanglam/c3c) - A bot that can be customizable using plugins. Support Facebook & Discord.
 - [Miraiv2](https://github.com/miraiPr0ject/miraiv2) - A simple Facebook Messenger Bot made by CatalizCS and SpermLord.
+- [Lawer](https://github.com/LawerPr0ject/lawer) - A simple Facebook Messenger Bot made by Justin and ManhG.
 
 ## Projects using this API (original repository, facebook-chat-api):
 

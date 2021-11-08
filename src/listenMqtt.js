@@ -600,7 +600,9 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
 function markDelivery(ctx, api, threadID, messageID) {
   if (threadID && messageID) {
     api.markAsDelivered(threadID, messageID, (err) => {
-      if (err) log.error("markAsDelivered", err);
+      if (err){
+        log.error("markAsDelivered", err);
+      }
       else {
         if (ctx.globalOptions.autoMarkRead) {
           api.markAsRead(threadID, (err) => {
