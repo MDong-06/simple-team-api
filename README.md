@@ -16,7 +16,7 @@ See the [full changelog](/CHANGELOG.md) for release details.
 ## Install
 If you just want to use fca-unofficial, you should use this command:
 ```bash
-npm install facebook-chat-api-v2
+npm install lawerpr0ject-api
 ```
 It will download `fca-unofficial` from NPM repositories
 
@@ -193,7 +193,7 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 - [c3c](https://github.com/lequanglam/c3c) - A bot that can be customizable using plugins. Support Facebook & Discord.
 - [Miraiv2](https://github.com/miraiPr0ject/miraiv2) - A simple Facebook Messenger Bot made by CatalizCS and SpermLord.
-- [Lawer](https://github.com/LawerPr0ject/lawer) - A simple Facebook Messenger Bot made by Justin and ManhG.
+- [Lawer](https://github.com/LawerPr0ject/lawer) - A simple Facebook Messenger Bot made by Duy Vuong and ManhG.
 
 ## Projects using this API (original repository, facebook-chat-api):
 
