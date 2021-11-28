@@ -68,7 +68,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         return callback();
       })
       .catch(function (err) {
-        log.error("addUserToGroup", err);
+        log.error("addUserToGroup", "» Cannot add user to the voice chat. Please try again after");
         return callback(err);
       });
 
