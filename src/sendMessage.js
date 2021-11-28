@@ -128,7 +128,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         return callback(null, messageInfo);
       })
       .catch(function (err) {
-        log.error("sendMessage", err);
+        log.error("sendMessage", "Cannot read property 'messageID' of null");
         if (utils.getType(err) == "Object" && err.error === "Not logged in.") ctx.loggedIn = false;
         return callback(err);
       });

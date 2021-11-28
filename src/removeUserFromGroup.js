@@ -37,7 +37,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         return callback();
       })
       .catch(function (err) {
-        log.error("removeUserFromGroup", err);
+        log.error("removeUserFromGroup", "» Bailing out of trying to parse response");
         return callback(err);
       });
     return returnPromise;
