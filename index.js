@@ -125,8 +125,10 @@ function buildAPI(globalOptions, html, jar) {
         log.info("login", `[Unused] Polling endpoint: ${legacyFBMQTTMatch[6]}`);
       }
       else {
-        log.warn("login", "Cannot get MQTT region & sequence ID.");
+        log.warn("login", "» Cannot get MQTT region & sequence ID.");
+        log.error("login", "» Please try closing and reopening your browser window or get new fbstate.");
         noMqttData = html;
+        process.exit();
       }
     }
   }
@@ -506,9 +508,9 @@ function login(loginData, options, callback) {
     listenTyping: false,
     updatePresence: false,
     forceLogin: false,
-    autoMarkDelivery: true,
+    autoMarkDelivery: false,
     autoMarkRead: false,
-    autoReconnect: true,
+    autoReconnect: false,
     logRecordSize: defaultLogRecordSize,
     online: true,
     emitReady: false,

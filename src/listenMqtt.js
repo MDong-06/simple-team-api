@@ -99,10 +99,13 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
   var mqttClient = ctx.mqttClient;
 
   mqttClient.on('error', function (err) {
-    log.error("listenMqtt", err);
+    log.error("listenMqtt", "Connection refused: Server unavailable");
     mqttClient.end();
     if (ctx.globalOptions.autoReconnect) getSeqID();
-    else globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
+    else {
+      globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
+      process.exit();
+  }
   });
 
   mqttClient.on('connect', function () {
