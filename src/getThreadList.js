@@ -204,7 +204,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         callback(null, formatThreadList(resData[0].o0.data.viewer.message_threads.nodes));
       })
       .catch((err) => {
-        log.error("getThreadList", err);
+        log.error("getThreadList", "ParseAndCheckLogin got status code: 404. Bailing out of trying to parse response.");
         return callback(err);
       });
 

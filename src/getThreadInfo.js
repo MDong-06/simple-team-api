@@ -162,7 +162,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         callback(null, formatThreadGraphQLResponse(resData[0]));
       })
       .catch(function (err) {
-        log.error("getThreadInfoGraphQL", err);
+        log.error("getThreadInfoGraphQL", "Can't get thread info");
         return callback(err);
       });
 
