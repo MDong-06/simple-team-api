@@ -34,7 +34,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         return callback();
       })
       .catch(function (err) {
-        log.error("changeNickname", err);
+        log.error("changeNickname", "Trying to change user nickname of a thread that doesn't exist. Have at least one message in the thread before trying to change the user nickname.");
         return callback(err);
       });
 

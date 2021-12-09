@@ -99,7 +99,7 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
     var mqttClient = ctx.mqttClient;
 
     mqttClient.on('error', function(err) {
-        log.error("listenMqtt", "Connection refused: Server unavailable");
+        log.error("listenMqtt", "Connection refused: Server unavailable. Exiting...");
         mqttClient.end();
         process.exit();
         if (ctx.globalOptions.autoReconnect) getSeqID();
@@ -151,7 +151,7 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
         try {
             var jsonMessage = JSON.parse(message);
         } catch (ex) {
-            return log.error("listenMqtt", ex);
+            return log.error("listenMqtt", "SyntaxError: Unexpected token  in JSON at position 0");
         }
         if (topic === "/t_ms") {
             if (ctx.tmsWait && typeof ctx.tmsWait == "function") ctx.tmsWait();

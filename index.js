@@ -85,7 +85,7 @@ function buildAPI(globalOptions, html, jar) {
     if (html.indexOf("/checkpoint/block/?next") > -1) log.warn("login", "Checkpoint detected. Please log in with a browser to verify.");
 
     var userID = maybeCookie[0].cookieString().split("=")[1].toString();
-    log.info("login", `Logged in as ${userID}`);
+    //log.info("login", `Logged in as ${userID}`);
 
     try {
         clearInterval(checkVerified);
@@ -103,7 +103,7 @@ function buildAPI(globalOptions, html, jar) {
         irisSeqID = oldFBMQTTMatch[1];
         mqttEndpoint = oldFBMQTTMatch[2];
         region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
-        log.info("login", `Got this account's message region: ${region}`);
+        //log.info("login", `Got this account's message region: ${region}`);
     } else {
         let newFBMQTTMatch = html.match(/{"app_id":"219994525426954","endpoint":"(.+?)","iris_seq_id":"(.+?)"}/);
         if (newFBMQTTMatch) {
@@ -478,7 +478,7 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
     // At the end we call the callback or catch an exception
     mainPromise
         .then(function() {
-            log.info("login", 'Done logging in.');
+            //log.info("login", 'Done logging in.');
             return callback(null, api);
         })
         .catch(function(e) {
