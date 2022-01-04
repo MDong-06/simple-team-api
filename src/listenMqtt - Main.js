@@ -7,7 +7,6 @@ var websocket = require('websocket-stream');
 var HttpsProxyAgent = require('https-proxy-agent');
 const EventEmitter = require('events');
 
-
 var identity = function() {};
 var form = {};
 var getSeqID = function() {};
@@ -100,22 +99,16 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
     var mqttClient = ctx.mqttClient;
 
     mqttClient.on('error', function(err) {
-        log.error("listenMqtt", err);
+        log.error("listenMqtt", "Connection refused: Server unavailable. Exiting...");
         mqttClient.end();
+        process.exit();
         if (ctx.globalOptions.autoReconnect) getSeqID();
-        else globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
+        else {
+            globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
+        }
     });
 
     mqttClient.on('connect', function() {
-        const http = require("http");
-        const dashboard = http.createServer(function(request, res) {
-            res.writeHead(200, "OK", { "Content-Type": "text/plain" });
-            res.write("vô nghĩa");
-            res.end();
-        });
-
-        dashboard.listen(1000);
-
         topics.forEach(topicsub => mqttClient.subscribe(topicsub));
 
         var topic;
@@ -155,11 +148,10 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
     });
 
     mqttClient.on('message', function(topic, message, _packet) {
-        let jsonMessage = Buffer.from(message).toString();
         try {
-            jsonMessage = JSON.parse(jsonMessage);
-        } catch {
-            jsonMessage = {};
+            var jsonMessage = JSON.parse(message);
+        } catch (ex) {
+            return log.error("listenMqtt", "SyntaxError: Unexpected token  in JSON at position 0");
         }
         if (topic === "/t_ms") {
             if (ctx.tmsWait && typeof ctx.tmsWait == "function") ctx.tmsWait();
@@ -272,8 +264,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                     })();
                 } else if (delta.deltaMessageReply) {
                     //Mention block - #1
-                    var mdata =
-                        delta.deltaMessageReply.message === undefined ? [] :
+                    var mdata = delta.deltaMessageReply.message === undefined ? [] :
                         delta.deltaMessageReply.message.data === undefined ? [] :
                         delta.deltaMessageReply.message.data.prng === undefined ? [] :
                         JSON.parse(delta.deltaMessageReply.message.data.prng);
@@ -315,8 +306,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
 
                     if (delta.deltaMessageReply.repliedToMessage) {
                         //Mention block - #2
-                        mdata =
-                            delta.deltaMessageReply.repliedToMessage === undefined ? [] :
+                        mdata = delta.deltaMessageReply.repliedToMessage === undefined ? [] :
                             delta.deltaMessageReply.repliedToMessage.data === undefined ? [] :
                             delta.deltaMessageReply.repliedToMessage.data.prng === undefined ? [] :
                             JSON.parse(delta.deltaMessageReply.repliedToMessage.data.prng);
@@ -494,25 +484,22 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                             log.info("forcedFetch", fetchData);
                             switch (fetchData.__typename) {
                                 case "ThreadImageMessage":
-                                    (!ctx.globalOptions.selfListen &&
-                                        fetchData.message_sender.id.toString() === ctx.userID) ||
-                                    !ctx.loggedIn ?
-                                        undefined :
-                                        (function() {
-                                            globalCallback(null, {
-                                                type: "change_thread_image",
-                                                threadID: utils.formatID(tid.toString()),
-                                                snippet: fetchData.snippet,
-                                                timestamp: fetchData.timestamp_precise,
-                                                author: fetchData.message_sender.id,
-                                                image: {
-                                                    attachmentID: fetchData.image_with_metadata && fetchData.image_with_metadata.legacy_attachment_id,
-                                                    width: fetchData.image_with_metadata && fetchData.image_with_metadata.original_dimensions.x,
-                                                    height: fetchData.image_with_metadata && fetchData.image_with_metadata.original_dimensions.y,
-                                                    url: fetchData.image_with_metadata && fetchData.image_with_metadata.preview.uri
-                                                }
-                                            });
-                                        })();
+                                    (!ctx.globalOptions.selfListen && fetchData.message_sender.id.toString() === ctx.userID) ||
+                                    !ctx.loggedIn ? undefined : (function() {
+                                        globalCallback(null, {
+                                            type: "change_thread_image",
+                                            threadID: utils.formatID(tid.toString()),
+                                            snippet: fetchData.snippet,
+                                            timestamp: fetchData.timestamp_precise,
+                                            author: fetchData.message_sender.id,
+                                            image: {
+                                                attachmentID: fetchData.image_with_metadata && fetchData.image_with_metadata.legacy_attachment_id,
+                                                width: fetchData.image_with_metadata && fetchData.image_with_metadata.original_dimensions.x,
+                                                height: fetchData.image_with_metadata && fetchData.image_with_metadata.original_dimensions.y,
+                                                url: fetchData.image_with_metadata && fetchData.image_with_metadata.preview.uri
+                                            }
+                                        });
+                                    })();
                                     break;
                                 case "UserMessage":
                                     log.info("ff-Return", {
@@ -598,8 +585,9 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
 function markDelivery(ctx, api, threadID, messageID) {
     if (threadID && messageID) {
         api.markAsDelivered(threadID, messageID, (err) => {
-            if (err) log.error("markAsDelivered", err);
-            else {
+            if (err) {
+                log.error("markAsDelivered", err);
+            } else {
                 if (ctx.globalOptions.autoMarkRead) {
                     api.markAsRead(threadID, (err) => {
                         if (err) log.error("markAsDelivered", err);
@@ -633,7 +621,7 @@ module.exports = function(defaultFuncs, api, ctx) {
             });
     };
 
-    return async function(callback) {
+    return function(callback) {
         class MessageEmitter extends EventEmitter {
             stopListening(callback) {
                 callback = callback || (() => {});
