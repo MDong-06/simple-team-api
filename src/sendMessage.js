@@ -124,20 +124,21 @@ module.exports = function(defaultFuncs, api, ctx) {
                 return callback(null, messageInfo);
             })
             .catch(function(err) {
-                log.error("sendMessage", "Cannot read property 'messageID' of null");
+                log.error("sendMessage", err);
                 if (utils.getType(err) == "Object" && err.error === "Not logged in.") ctx.loggedIn = false;
                 return callback(err);
             });
     }
 
     function send(form, threadID, messageAndOTID, callback, isGroup) {
-        // We're doing a query to this to check if the given id is the id of
-        // a user or of a group chat. The form will be different depending
-        // on that.
+        // fix lỗi = cach fetch threadID
+        // iq 5 trieu nam =)) 
         if (utils.getType(threadID) === "Array") sendContent(form, threadID, false, messageAndOTID, callback);
         else {
-            if (utils.getType(isGroup) != "Boolean") sendContent(form, threadID, threadID.length > 0, messageAndOTID, callback);
-            else sendContent(form, threadID, !isGroup, messageAndOTID, callback);
+            var THREADFIX = "ThreadID".replace("ThreadID", threadID);
+            if (THREADFIX.length <= 15 && THREADFIX.indexOf(1) == 0) return sendContent(form, threadID, !isGroup, messageAndOTID, callback);
+            else if (THREADFIX.length >= 15) return sendContent(form, threadID, threadID.length === 15, messageAndOTID, callback);
+            else return sendContent(form, threadID, threadID.length === 15, messageAndOTID, callback);
         }
     }
 
@@ -308,6 +309,7 @@ module.exports = function(defaultFuncs, api, ctx) {
                 )
             )
         );
+
         return returnPromise;
     };
 };
