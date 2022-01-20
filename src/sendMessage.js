@@ -136,7 +136,7 @@ module.exports = function(defaultFuncs, api, ctx) {
         // on that.
         if (utils.getType(threadID) === "Array") sendContent(form, threadID, false, messageAndOTID, callback);
         else {
-            if (utils.getType(isGroup) != "Boolean") sendContent(form, threadID, threadID.length >= 4, messageAndOTID, callback);
+            if (utils.getType(isGroup) != "Boolean") sendContent(form, threadID, threadID.length > 0, messageAndOTID, callback);
             else sendContent(form, threadID, !isGroup, messageAndOTID, callback);
         }
     }
