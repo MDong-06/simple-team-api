@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 "use strict";
 
-const bluebird = require("bluebird");
+var bluebird = require("bluebird");
 var request = bluebird.promisify(require("request").defaults({ jar: true }));
 var stream = require("stream");
 var log = require("npmlog");
@@ -214,8 +214,7 @@ function generatePresence(userID) {
                     at: time
                 },
                 ch: {
-                    ["p_" + userID]: 0
-                }
+                    ["p_" + userID]: 0 }
             })
         )
     );
@@ -269,12 +268,7 @@ function _formatAttachment(attachment1, attachment2) {
         type = "StickerAttachment";
         blob = attachment1.sticker_attachment;
     } else if (!type && attachment1.extensible_attachment) {
-        if (
-            attachment1.extensible_attachment.story_attachment &&
-            attachment1.extensible_attachment.story_attachment.target &&
-            attachment1.extensible_attachment.story_attachment.target.__typename &&
-            attachment1.extensible_attachment.story_attachment.target.__typename === "MessageLocation"
-        ) type = "MessageLocation";
+        if (attachment1.extensible_attachment.story_attachment && attachment1.extensible_attachment.story_attachment.target && attachment1.extensible_attachment.story_attachment.target.__typename && attachment1.extensible_attachment.story_attachment.target.__typename === "MessageLocation") type = "MessageLocation";
         else type = "ExtensibleAttachment";
 
         blob = attachment1.extensible_attachment;
@@ -565,23 +559,14 @@ function _formatAttachment(attachment1, attachment2) {
                 url: blob.story_attachment.url,
 
                 title: blob.story_attachment.title_with_entities.text,
-                description: blob.story_attachment.description &&
-                    blob.story_attachment.description.text,
+                description: blob.story_attachment.description && blob.story_attachment.description.text,
                 source: blob.story_attachment.source ? blob.story_attachment.source.text : null,
 
-                image: blob.story_attachment.media &&
-                    blob.story_attachment.media.image &&
-                    blob.story_attachment.media.image.uri,
-                width: blob.story_attachment.media &&
-                    blob.story_attachment.media.image &&
-                    blob.story_attachment.media.image.width,
-                height: blob.story_attachment.media &&
-                    blob.story_attachment.media.image &&
-                    blob.story_attachment.media.image.height,
-                playable: blob.story_attachment.media &&
-                    blob.story_attachment.media.is_playable,
-                duration: blob.story_attachment.media &&
-                    blob.story_attachment.media.playable_duration_in_ms,
+                image: blob.story_attachment.media && blob.story_attachment.media.image && blob.story_attachment.media.image.uri,
+                width: blob.story_attachment.media && blob.story_attachment.media.image && blob.story_attachment.media.image.width,
+                height: blob.story_attachment.media && blob.story_attachment.media.image && blob.story_attachment.media.image.height,
+                playable: blob.story_attachment.media && blob.story_attachment.media.is_playable,
+                duration: blob.story_attachment.media && blob.story_attachment.media.playable_duration_in_ms,
                 playableUrl: blob.story_attachment.media == null ? null : blob.story_attachment.media.playable_url,
 
                 subattachments: blob.story_attachment.subattachments,
@@ -609,15 +594,7 @@ function _formatAttachment(attachment1, attachment2) {
                 fileSize: -1
             };
         default:
-            throw new Error(
-                "unrecognized attach_file of type " +
-                type +
-                "`" +
-                JSON.stringify(attachment1, null, 4) +
-                " attachment2: " +
-                JSON.stringify(attachment2, null, 4) +
-                "`"
-            );
+            throw new Error(`Unrecognized attach_file of type type\`JSON.stringify(attachment1, null, 4) attachment2: JSON.stringify(attachment2, null, 4)\``);
     }
 }
 
@@ -625,22 +602,14 @@ function formatAttachment(attachments, attachmentIds, attachmentMap, shareMap) {
     attachmentMap = shareMap || attachmentMap;
     return attachments ?
         attachments.map(function(val, i) {
-            if (!attachmentMap ||
-                !attachmentIds ||
-                !attachmentMap[attachmentIds[i]]
-            ) {
-                return _formatAttachment(val);
-            }
+            if (!attachmentMap || !attachmentIds || !attachmentMap[attachmentIds[i]]) return _formatAttachment(val);
             return _formatAttachment(val, attachmentMap[attachmentIds[i]]);
         }) : [];
 }
 
 function formatDeltaMessage(m) {
     var md = m.delta.messageMetadata;
-    var mdata =
-        m.delta.data === undefined ? [] :
-        m.delta.data.prng === undefined ? [] :
-        JSON.parse(m.delta.data.prng);
+    var mdata = m.delta.data === undefined ? [] : m.delta.data.prng === undefined ? [] : JSON.parse(m.delta.data.prng);
     var m_id = mdata.map(u => u.i);
     var m_offset = mdata.map(u => u.o);
     var m_length = mdata.map(u => u.l);
@@ -685,12 +654,7 @@ function formatMessage(m) {
         threadName: originalMessage.group_thread_info ? originalMessage.group_thread_info.name : originalMessage.sender_name,
         location: originalMessage.coordinates ? originalMessage.coordinates : null,
         messageID: originalMessage.mid ? originalMessage.mid.toString() : originalMessage.message_id,
-        attachments: formatAttachment(
-            originalMessage.attachments,
-            originalMessage.attachmentIds,
-            originalMessage.attachment_map,
-            originalMessage.share_map
-        ),
+        attachments: formatAttachment(originalMessage.attachments, originalMessage.attachmentIds, originalMessage.attachment_map, originalMessage.share_map),
         timestamp: originalMessage.timestamp,
         timestampAbsolute: originalMessage.timestamp_absolute,
         timestampRelative: originalMessage.timestamp_relative,
@@ -762,7 +726,7 @@ function formatDeltaEvent(m) {
     // log:thread-icon => {thread_icon}
     // log:thread-name => {name}
     // log:subscribe => {addedParticipants - [Array]}
-    //log:unsubscribe => {leftParticipantFbId}
+    // log:unsubscribe => {leftParticipantFbId}
 
     switch (m.class) {
         case "AdminTextMessage":
@@ -989,13 +953,8 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
                 var retryTime = Math.floor(Math.random() * 5000);
                 log.warn("parseAndCheckLogin", "Got status code " + data.statusCode + " - " + retryCount + ". attempt to retry in " + retryTime + " milliseconds...");
                 var url = data.request.uri.protocol + "//" + data.request.uri.hostname + data.request.uri.pathname;
-                if (data.request.headers["Content-Type"].split(";")[0] === "multipart/form-data") {
-                    return bluebird.delay(retryTime).then(() => defaultFuncs.postFormData(url, ctx.jar, data.request.formData, {}))
-                        .then(parseAndCheckLogin(ctx, defaultFuncs, retryCount));
-                } else {
-                    return bluebird.delay(retryTime).then(() => defaultFuncs.post(url, ctx.jar, data.request.formData))
-                        .then(parseAndCheckLogin(ctx, defaultFuncs, retryCount));
-                }
+                if (data.request.headers["Content-Type"].split(";")[0] === "multipart/form-data") return bluebird.delay(retryTime).then(() => defaultFuncs.postFormData(url, ctx.jar, data.request.formData, {})).then(parseAndCheckLogin(ctx, defaultFuncs, retryCount));
+                else return bluebird.delay(retryTime).then(() => defaultFuncs.post(url, ctx.jar, data.request.formData)).then(parseAndCheckLogin(ctx, defaultFuncs, retryCount));
             }
             if (data.statusCode !== 200) throw new Error("parseAndCheckLogin got status code: " + data.statusCode + ". Bailing out of trying to parse response.");
 
@@ -1037,7 +996,7 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
                 }
             }
 
-            if (res.error === 1357001) throw { error: "Chưa Đăng Nhập Được - Appstate Đã Bị Lỗi" };
+            if (res.error === 1357001) throw { error: "Not logged in." };
             return res;
         });
     };
@@ -1073,14 +1032,14 @@ var NUM_TO_DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function formatDate(date) {
     var d = date.getUTCDate();
-    d = d >= 10 ? d : "0" + d;
+    d = d >= 10 ? d : `0${d}`;
     var h = date.getUTCHours();
-    h = h >= 10 ? h : "0" + h;
+    h = h >= 10 ? h : `0${h}`;
     var m = date.getUTCMinutes();
-    m = m >= 10 ? m : "0" + m;
+    m = m >= 10 ? m : `0${m}`;
     var s = date.getUTCSeconds();
-    s = s >= 10 ? s : "0" + s;
-    return (NUM_TO_DAY[date.getUTCDay()] + ", " + d + " " + NUM_TO_MONTH[date.getUTCMonth()] + " " + date.getUTCFullYear() + " " + h + ":" + m + ":" + s + " GMT");
+    s = s >= 10 ? s : `0${s}`;
+    return `${NUM_TO_DAY[date.getUTCDay()]}, ${d} ${NUM_TO_MONTH[date.getUTCMonth()]} ${date.getUTCFullYear()} ${h}:${m}:${s} GMT`;
 }
 
 function formatCookie(arr, url) {
@@ -1187,27 +1146,24 @@ function decodeClientPayload(payload) {
 }
 
 function getAppState(jar) {
-    return jar
-        .getCookies("https://www.facebook.com")
-        .concat(jar.getCookies("https://facebook.com"))
-        .concat(jar.getCookies("https://www.messenger.com"));
+    return jar.getCookies("https://www.facebook.com").concat(jar.getCookies("https://facebook.com")).concat(jar.getCookies("https://www.messenger.com"));
 }
 module.exports = {
-    isReadableStream: isReadableStream,
-    get: get,
-    post: post,
-    postFormData: postFormData,
-    generateThreadingID: generateThreadingID,
-    generateOfflineThreadingID: generateOfflineThreadingID,
-    getGUID: getGUID,
-    getFrom: getFrom,
-    makeParsable: makeParsable,
-    arrToForm: arrToForm,
-    getSignatureID: getSignatureID,
+    isReadableStream,
+    get,
+    post,
+    postFormData,
+    generateThreadingID,
+    generateOfflineThreadingID,
+    getGUID,
+    getFrom,
+    makeParsable,
+    arrToForm,
+    getSignatureID,
     getJar: request.jar,
-    generateTimestampRelative: generateTimestampRelative,
-    makeDefaults: makeDefaults,
-    parseAndCheckLogin: parseAndCheckLogin,
+    generateTimestampRelative,
+    makeDefaults,
+    parseAndCheckLogin,
     saveCookies,
     getType,
     _formatAttachment,
