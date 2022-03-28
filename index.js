@@ -179,6 +179,7 @@ function buildAPI(globalOptions, html, jar) {
         'getThreadPictures',
         'getUserID',
         'getUserInfo',
+        'handleFriendRequest',
         'handleMessageRequest',
         'listenMqtt',
         'logout',
