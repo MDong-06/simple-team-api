@@ -1,6 +1,6 @@
 {
-  "name": "lawerpr0ject-api",
-  "version": "1.7.4",
+  "name": "simple-team-api",
+  "version": "1.2.0",
   "description": "A Facebook chat API that doesn't rely on XMPP. Will NOT be deprecated after April 30th 2015.",
   "scripts": {
     "test": "mocha",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/manhkhac/lawerpr0ject-api.git"
+    "url": "git://github.com/....git"
   },
   "keywords": [
     "facebook",
@@ -73,7 +73,7 @@
       ]
     }
   },
-  "homepage": "https://github.com/manhkhac/lawerpr0ject-api#readme",
+  "homepage": "https://github.com/....#readme",
   "main": "index.js",
   "directories": {
     "test": "test"
