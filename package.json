@@ -23,13 +23,13 @@
   "author": "Avery, David, Maude, Benjamin, UIRI, MiraiTeam, LawerTeam",
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^2.11.0",
-    "cheerio": "^1.0.0-rc.10",
-    "https-proxy-agent": "^4.0.0",
-    "mqtt": "^4.2.8",
+    "bluebird": "latest",
+    "cheerio": "latest",
+    "https-proxy-agent": "latest",
+    "mqtt": "^4.3.7",
     "npmlog": "^1.2.0",
-    "request": "^2.53.0",
-    "websocket-stream": "^5.5.0"
+    "request": "latest",
+    "websocket-stream": "latest"
   },
   "engines": {
     "node": ">=10.x"
